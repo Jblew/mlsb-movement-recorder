@@ -1,0 +1,6 @@
+{
+    "terminal.integrated.env.osx": {
+        "PATH": "/Users/teofil/.platformio/penv/bin:/Users/teofil/.platformio/penv:/Users/teofil/.sdkman/candidates/springboot/current/bin:/Users/teofil/.sdkman/candidates/maven/current/bin:/Users/teofil/.sdkman/candidates/java/current/bin:/Users/teofil/.sdkman/candidates/groovy/current/bin:/Users/teofil/.sdkman/candidates/gradle/current/bin:/Users/teofil/.nvm/versions/node/v10.15.0/bin:/Users/teofil/.local/bin:/Users/teofil/.pyenv/shims:/Users/teofil/.pyenv/bin:/Users/teofil/bin/bin:/Users/teofil/Library/Python/3.6/bin:/Library/Frameworks/Python.framework/Versions/3.6/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/MacGPG2/bin:/Applications/Wireshark.app/Contents/MacOS",
+        "PLATFORMIO_CALLER": "vscode"
+    }
+}
