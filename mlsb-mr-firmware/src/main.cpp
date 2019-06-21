@@ -51,7 +51,13 @@ void loop()
 	mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
 	delay(1); // esp8266 needs thread yielding for proper functioning of the network stack
 
-	sprintf(msgbuf, "<%d> mpuConn=%d a[x=%d y=%d z=%d] g[x=%d y=%d z=%d]", i++, mpuConn, ax, ay, az, gx, gy, gz);
+	if (mpuConn) {
+		sprintf(msgbuf, 
+			"{\"i\":%d,\"ax\":%d,\"ay\":%d,\"az\":%d,\"gx\":%d,\"gy\":%d,\"gz\":%d}", 
+			i++, ax, ay, az, gx, gy, gz);
+	}
+	else sprintf(msgbuf, "{\"error\":\"accelerometer_not_connected\"}");
+	
 	Serial.println(msgbuf);
 	remoteComm.send(msgbuf);
 	delay(250);
