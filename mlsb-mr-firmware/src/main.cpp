@@ -7,9 +7,15 @@
 #include "lib/i2cscan/I2CScan.h"
 #include "MlsbMrConfig.h"
 
-const int WIRING_I2C_SDA = D3;
-const int WIRING_I2C_SCL = D4;
-const uint8_t I2C_ADDRESSING_MPU6050_ANTERIOR = 0x68;
+
+
+#define WIRING_I2C_SDA D3
+#define WIRING_I2C_SCL D4
+#define I2C_ADDRESSING_MPU6050_ANTERIOR 0x68
+#define FPS 10
+
+
+
 
 WsComm remoteComm;
 MPU6050 mpu(I2C_ADDRESSING_MPU6050_ANTERIOR);
