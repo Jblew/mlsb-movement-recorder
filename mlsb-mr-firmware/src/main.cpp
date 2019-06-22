@@ -7,15 +7,14 @@
 #include "lib/i2cscan/I2CScan.h"
 #include "MlsbMrConfig.h"
 
-
-
+//
+//
 #define WIRING_I2C_SDA D3
 #define WIRING_I2C_SCL D4
 #define I2C_ADDRESSING_MPU6050_ANTERIOR 0x68
-#define FPS 10
+#define FPS 25
 
-
-
+const unsigned long loopIntervalMc = 1000 * 1000 / FPS;
 
 WsComm remoteComm;
 MPU6050 mpu(I2C_ADDRESSING_MPU6050_ANTERIOR);
@@ -48,8 +47,11 @@ bool mpuConn = false;
 int loopI = 0;
 char msgbuf[200];
 
+unsigned long loopStime = 0;
+unsigned long loopTookMc = 0;
 void loop()
 {
+	loopStime = micros();
 	mpuConn = mpu.testConnection();
 	mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
 	delay(1); // esp8266 needs thread yielding for proper functioning of the network stack
@@ -66,5 +68,17 @@ void loop()
 	Serial.println(msgbuf);
 	delay(1);
 	remoteComm.send(msgbuf);
-	delay(250);
+	delay(1);
+
+	loopTookMc = micros() - loopStime;
+	if (loopTookMc < loopIntervalMc)
+	{
+		delayMicroseconds(loopIntervalMc - loopTookMc);
+	}
+	else
+	{
+		sprintf(msgbuf, "{\"i\":%d,\"error\":\"cannot_keep_fps\"}", loopI);
+		Serial.println(msgbuf);
+	}
+	loopI++;
 }
