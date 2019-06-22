@@ -33,6 +33,9 @@ void setup()
 	Serial.println("i2c_init_done");
 
 	mpu.initialize();
+	mpu.setFullScaleAccelRange(MPU6050_ACCEL_FS_2);
+	mpu.setFullScaleGyroRange(MPU6050_GYRO_FS_250);
+
 	Serial.println(mpu.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
 	Serial.println("mpu_init_done");
 
@@ -42,8 +45,8 @@ void setup()
 int16_t ax = 0, ay = 0, az = 0;
 int16_t gx = 0, gy = 0, gz = 0;
 bool mpuConn = false;
-uint8_t i = 0;
-char msgbuf[60];
+int loopI = 0;
+char msgbuf[200];
 
 void loop()
 {
@@ -51,14 +54,17 @@ void loop()
 	mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
 	delay(1); // esp8266 needs thread yielding for proper functioning of the network stack
 
-	if (mpuConn) {
-		sprintf(msgbuf, 
-			"{\"i\":%d,\"ax\":%d,\"ay\":%d,\"az\":%d,\"gx\":%d,\"gy\":%d,\"gz\":%d}", 
-			i++, ax, ay, az, gx, gy, gz);
+	if (mpuConn)
+	{
+		sprintf(msgbuf,
+				"{\"i\":%d,\"t\":%lu,\"ax\":%d,\"ay\":%d,\"az\":%d,\"gx\":%d,\"gy\":%d,\"gz\":%d,\"asc\":2,\"gsc\":250}",
+				loopI, millis(), ax, ay, az, gx, gy, gz);
 	}
-	else sprintf(msgbuf, "{\"error\":\"accelerometer_not_connected\"}");
-	
+	else
+		sprintf(msgbuf, "{\"i\":%d,\"error\":\"accelerometer_not_connected\",\"ax\":%d}", loopI, ax);
+
 	Serial.println(msgbuf);
+	delay(1);
 	remoteComm.send(msgbuf);
 	delay(250);
 }
